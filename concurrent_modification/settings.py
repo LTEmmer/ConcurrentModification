@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'concurrent_modification.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bank',
+        'USER': 'root',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',  # or your server IP if it's remote
+        'PORT': '3306',
     }
 }
 
