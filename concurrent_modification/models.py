@@ -17,7 +17,6 @@ class Accounts(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'accounts'
 
 
@@ -29,7 +28,6 @@ class Addresses(models.Model):
     addr_zip = models.CharField(max_length=5)
 
     class Meta:
-        managed = False
         db_table = 'addresses'
 
 
@@ -39,7 +37,6 @@ class Admins(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'admins'
 
 
@@ -48,7 +45,6 @@ class BankBranches(models.Model):
     location = models.CharField(unique=True, max_length=100)
 
     class Meta:
-        managed = False
         db_table = 'bank_branches'
 
 
@@ -58,7 +54,6 @@ class DebitCards(models.Model):
     card_account = models.ForeignKey(Accounts, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'debit_cards'
 
 
@@ -71,7 +66,6 @@ class Employees(models.Model):
     employee_bank_branch = models.ForeignKey(BankBranches, models.DO_NOTHING, db_column='employee_bank_branch', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'employees'
 
 
@@ -82,7 +76,6 @@ class HelpTickets(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'help_tickets'
 
 
@@ -98,7 +91,6 @@ class Loans(models.Model):
     loan_account = models.ForeignKey(Accounts, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'loans'
 
 
@@ -111,7 +103,6 @@ class Overdrafts(models.Model):
     overdraft_transaction = models.ForeignKey('Transactions', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'overdrafts'
 
 
@@ -124,7 +115,6 @@ class PersonalDetails(models.Model):
     phone_area = models.CharField(max_length=3)
 
     class Meta:
-        managed = False
         db_table = 'personal_details'
 
 
@@ -138,7 +128,6 @@ class Transactions(models.Model):
     trans_amt = models.FloatField()
 
     class Meta:
-        managed = False
         db_table = 'transactions'
 
 
@@ -150,5 +139,4 @@ class Users(models.Model):
     acct = models.ForeignKey(Accounts, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'users'
