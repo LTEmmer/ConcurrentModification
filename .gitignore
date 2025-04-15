@@ -19,3 +19,11 @@
 # Virtual environment folders
 venv/
 env/
+concurrent_modification/__pycache__/__init__.cpython-313.pyc
+concurrent_modification/__pycache__/admin.cpython-313.pyc
+concurrent_modification/__pycache__/models.cpython-313.pyc
+concurrent_modification/__pycache__/settings.cpython-313.pyc
+concurrent_modification/__pycache__/urls.cpython-313.pyc
+concurrent_modification/__pycache__/wsgi.cpython-313.pyc
+concurrent_modification/migrations/__pycache__/__init__.cpython-313.pyc
+concurrent_modification/migrations/__pycache__/0001_initial.cpython-313.pyc
