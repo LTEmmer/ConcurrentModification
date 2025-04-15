@@ -104,5 +104,12 @@ class SigninView(View):
 
 class HomeView(View):
     def get(self, request):
-        return render(request, 'homepage.html')
-
+        username = request.session.items.user.username
+        username = request.session.get('username')
+        print("GET username from session:", username)
+        return render(request, 'homepage.html', {"username": username})
+    
+    def post(self, request):
+        username = request.session.get('username')
+        print("POST username from session:", username)
+        return render(request, 'homepage.html', {"username": username})
