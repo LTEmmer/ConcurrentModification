@@ -50,13 +50,8 @@
         <a href="/Help/">Help</a>
         <a href="{% url 'signin' %}">Logout</a>
     </div>
-    <p>Logged in as: {{ username }}</p>
-    <h2>Session Dump:</h2>
-<ul>
-{% for key, value in request.session.items %}
-    <li>{{ key }} {{ value }}</li>
-{% endfor %}
-</ul>
+    <p style="display:flex; justify-content: center;align-items: center;height: 20vh;font-size: large;">Logged in as: {{ username }}</p>
+    <p2 style="display:flex; justify-content: center;align-items: center;height: 5vh;font-size: large;">Welcome {{ name }}!</p2>
 
     <!-- if someone is an admin their homepage should be different
     they could have a link to bank branches, employees and functionality to insert, alter and delete 

@@ -94,6 +94,9 @@ class SigninView(View):
             user = Users.objects.get(username=username, pwd=password)
             request.session['user_id'] = user.user_id
             request.session['username'] = user.username
+            personal = PersonalDetails.objects.get(details_username=user.username)
+            print("Found personal details:", personal.first_name)
+            request.session['first_name'] = personal.first_name
             return redirect('home')
 
         except Users.DoesNotExist:
@@ -105,9 +108,8 @@ class SigninView(View):
 class HomeView(View):
     def get(self, request):
         username = request.session.get('username')
-        print("GET username from session:", username)
-        print(username)
-        return render(request, 'homepage.html', {"username": username})
+        name = request.session.get('first_name')
+        return render(request, 'homepage.html', {"username": username, "name": name})
     
     # Probably don't need POST for homepage yet, uncomment when needed
     #def post(self, request):
