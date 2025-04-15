@@ -94,7 +94,7 @@ class SigninView(View):
             user = Users.objects.get(username=username, pwd=password)
             request.session['user_id'] = user.user_id
             request.session['username'] = user.username
-            return render(request, 'homepage.html')
+            return redirect('home')
 
         except Users.DoesNotExist:
             # The username or password are incorrect
@@ -104,12 +104,13 @@ class SigninView(View):
 
 class HomeView(View):
     def get(self, request):
-        username = request.session.items.user.username
         username = request.session.get('username')
         print("GET username from session:", username)
+        print(username)
         return render(request, 'homepage.html', {"username": username})
     
-    def post(self, request):
-        username = request.session.get('username')
-        print("POST username from session:", username)
-        return render(request, 'homepage.html', {"username": username})
+    # Probably don't need POST for homepage yet, uncomment when needed
+    #def post(self, request):
+    #    username = request.session.get('username')
+    #    print("POST username from session:", username)
+    #    return render(request, 'homepage.html', {"username": username})
