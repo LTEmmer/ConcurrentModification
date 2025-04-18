@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import SigninView, HomeView, RegisterView
+from .loans import loans_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +25,7 @@ urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('register/', RegisterView.as_view(), name='register')
 ]
+
+urlpatterns += loans_urlpatterns
+
+
