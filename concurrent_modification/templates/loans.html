@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Loans</title>
+  <style>
+    .navbar {
+      display:flex; background:#f0f0f0; padding:10px;
+      justify-content:space-around; position:fixed; top:0;
+      width:100%; box-shadow:0 2px 5px rgba(0,0,0,0.1); z-index:100;
+    }
+    .navbar a {
+      text-decoration:none; color:#333; background:#ddd;
+      padding:8px 16px; border-radius:6px; transition:background .3s;
+    }
+    .navbar a:hover, .navbar a.active { background:#bbb; }
+    body {
+      margin:0; padding-top:60px; font-family:Arial, sans-serif;
+      background:#fafafa;
+    }
+    main {
+      max-width:960px; margin:20px auto; padding:0 20px;
+    }
+    .loans-table {
+      width:100%; border-collapse:collapse; margin-top:20px;
+      background:#fff;
+    }
+    .loans-table th, .loans-table td {
+      border:1px solid #ccc; padding:10px; text-align:center;
+    }
+    .loans-table th { background:#f9f9f9; }
+    .pagination {
+      text-align:center; margin:20px 0;
+    }
+    .pagination a, .pagination span {
+      margin:0 4px; text-decoration:none; padding:6px 10px;
+      border:1px solid #ccc; border-radius:4px; color:#333;
+    }
+    .pagination .current {
+      background:#ddd; pointer-events:none; font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'loans' %}" class="active">Loans</a>
+    <a href="{% url 'signin' %}">Logout</a>
+  </div>
+
+  <main>
+    <h1>Your Loans</h1>
+
+    {% if loans %}
+      <table class="loans-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Original</th>
+            <th>Paid</th>
+            <th>Owed</th>
+            <th>APR (%)</th>
+            <th>Interest</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for loan in loans %}
+          <tr>
+            <td>{{ loan.loan_id }}</td>
+            <td>{{ loan.original_amount|floatformat:2 }}</td>
+            <td>{{ loan.amount_paid|floatformat:2 }}</td>
+            <td>{{ loan.amount_owed|floatformat:2 }}</td>
+            <td>{{ loan.apr|floatformat:2 }}</td>
+            <td>{{ loan.total_interest|floatformat:2 }}</td>
+            <td>{{ loan.paid|yesno:"Paid,Unpaid" }}</td>
+            <td>{{ loan.created_at|date:"M j, Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No loans are associated with your account.</p>
+    {% endif %}
+
+    <p><a href="{% url 'home' %}">← Back to Home</a></p>
+  </main>
+
+</body>
+</html>
