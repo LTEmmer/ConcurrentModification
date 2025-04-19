@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import Users, PersonalDetails, Addresses
+from .models import Users, PersonalDetails, Addresses, Loans
 from django.db.models import Q
 
 class RegisterView(View):
@@ -111,8 +111,21 @@ class HomeView(View):
         name = request.session.get('first_name')
         return render(request, 'homepage.html', {"username": username, "name": name})
     
-    # Probably don't need POST for homepage yet, uncomment when needed
-    #def post(self, request):
-    #    username = request.session.get('username')
-    #    print("POST username from session:", username)
-    #    return render(request, 'homepage.html', {"username": username})
+class AccountView(View):
+    def get(self, request):
+        return render(request, 'accounts.html')
+
+class LoansView(View):
+    def get(self, request):
+        # redirect if not signed in
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        # pull this user’s loans
+        loans = (
+            Loans.objects
+                 .filter(loan_account__user__user_id=user_id)
+                 .order_by('-created_at')
+        )
+        return render(request, 'loans.html', {'loans': loans})
