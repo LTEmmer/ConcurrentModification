@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blank Page</title>
+    <title>Accounts</title>
 </head>
 <body>
+
+    {% if account %}
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <h1>{{ user }}'s Debit Account</h1>
+        <p><strong>Account ID:</strong> {{ account.acct_id }}</p>
+        <p><strong>Type:</strong> {{ account.acct_type }}</p>
+        <p><strong>Active:</strong> {{ account.is_active }}</p>
+        <p><strong>Balance:</strong> ${{ account.balance }}</p>
+        <p><strong>Created:</strong> {{ account.created_at }}</p>
+    </div>
+    {% else %}
+    <p style="display: flex; justify-content: center;">No account information available.</p>
+    {% endif %}
 
 </body>
 </html>

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import Users, PersonalDetails, Addresses, Loans
+from .models import Users, PersonalDetails, Addresses, Loans, Accounts
 from django.db.models import Q
 
 class RegisterView(View):
@@ -113,7 +113,11 @@ class HomeView(View):
     
 class AccountView(View):
     def get(self, request):
-        return render(request, 'accounts.html')
+        name = request.session.get('first_name')
+        user_id = request.session.get('user_id')
+        user = Users.objects.get(user_id=user_id)
+        account = Accounts.objects.filter(user=user).first()
+        return render(request, 'accounts.html', {'user': name, 'account' : account})
 
 class LoansView(View):
     def get(self, request):
