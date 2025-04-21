@@ -6,19 +6,21 @@
 </head>
 <body>
 
-    {% extends 'homepage.html' %}
+    {% extends 'navbar.html' %}
 
-    {% block title %}Debit{% endblock %}
+    {% block title %}Accounts{% endblock %}
 
     {% block content %}
 
     {% if account %}
     <div style="display: flex; flex-direction: column; align-items: center;">
         <h1>{{ user }}'s Debit Account</h1>
+        {% if account.is_active == 1 %} <p style="color:rgb(8, 221, 8)"><strong>Active</strong></p>
+        {% else %} <p style="color:red"><strong>Inactive</strong></p>
+        {% endif %}
         <p><strong>Account ID:</strong> {{ account.acct_id }}</p>
         <p><strong>Type:</strong> {{ account.acct_type }}</p>
-        <p><strong>Active:</strong> {{ account.is_active }}</p>
-        <p><strong>Balance:</strong> ${{ account.balance }}</p>
+        <p><strong>Balance:</strong> ${{ account.balance | floatformat:2}}</p>
         <p><strong>Created:</strong> {{ account.created_at }}</p>
     </div>
     {% else %}
