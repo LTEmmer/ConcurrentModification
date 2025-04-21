@@ -65,7 +65,7 @@
             <th>Original</th>
             <th>Paid</th>
             <th>Owed</th>
-            <th>APR (%)</th>
+            <th>APR</th>
             <th>Interest</th>
             <th>Status</th>
             <th>Created</th>
@@ -75,11 +75,11 @@
           {% for loan in loans %}
           <tr>
             <td>{{ loan.loan_id }}</td>
-            <td>{{ loan.original_amount|floatformat:2 }}</td>
-            <td>{{ loan.amount_paid|floatformat:2 }}</td>
-            <td>{{ loan.amount_owed|floatformat:2 }}</td>
-            <td>{{ loan.apr|floatformat:2 }}</td>
-            <td>{{ loan.total_interest|floatformat:2 }}</td>
+            <td>${{ loan.original_amount|floatformat:2 }}</td>
+            <td>${{ loan.amount_paid|floatformat:2 }}</td>
+            <td>${{ loan.amount_owed|floatformat:2 }}</td>
+            <td>{{ loan.apr|floatformat:2 }}%</td>
+            <td>${{ loan.total_interest|floatformat:2 }}</td>
             <td>{{ loan.paid|yesno:"Paid,Unpaid" }}</td>
             <td>{{ loan.created_at|date:"M j, Y H:i" }}</td>
           </tr>
@@ -90,7 +90,7 @@
       <p>No loans are associated with your account.</p>
     {% endif %}
 
-    <p><a href="{% url 'home' %}">← Back to Home</a></p>
+    <!-- <p><a href="{% url 'home' %}">← Back to Home</a></p> -->
   </main>
 
   {% endblock %}
