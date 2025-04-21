@@ -142,7 +142,6 @@ class DebitView(View):
 
         try:
             account = Accounts.objects.get(user_id=user_id)
-            debit_card = DebitCards.objects.get(card_account=account)
             last_txn = Transactions.objects.filter(acct=account).order_by('-trans_date', '-trans_time').first()
         except (Accounts.DoesNotExist, DebitCards.DoesNotExist):
             return render(request, 'debit.html', {'debit': None, 'user': request.session.get('username')})
