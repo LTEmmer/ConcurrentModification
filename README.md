@@ -27,6 +27,10 @@ cd ConcurrentModification
 python -m venv env
 source env/bin/activate
 ```
+### or if on Windows
+```bash
+env\Scripts\activate.bat
+```
 
 ## 3. Install Dependencies
 

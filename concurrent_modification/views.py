@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import Users, PersonalDetails, Addresses, Loans, Accounts
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts
 from django.db.models import Q
 
 class RegisterView(View):
@@ -133,3 +133,27 @@ class LoansView(View):
                  .order_by('-created_at')
         )
         return render(request, 'loans.html', {'loans': loans})
+    
+class DebitView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            account = Accounts.objects.get(user_id=user_id)
+            debit_card = DebitCards.objects.get(card_account=account)
+            last_txn = Transactions.objects.filter(acct=account).order_by('-trans_date', '-trans_time').first()
+        except (Accounts.DoesNotExist, DebitCards.DoesNotExist):
+            return render(request, 'debit.html', {'debit': None, 'user': request.session.get('username')})
+
+        context = {
+            'user': request.session.get('username'),
+            'debit': {
+                'balance': account.balance,
+                'last_transaction': last_txn.trans_amt if last_txn else None,
+                'connected_account': account.acct_id,
+                'overdraft_protection': True
+            }
+        }
+        return render(request, 'debit.html', context)

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debit</title>
+</head>
+<body>
+    
+    {% extends 'homepage.html' %}
+
+    {% block title %}Debit{% endblock %}
+
+    {% block content %}
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
+        {% if debit %}
+        <h1>Debit Card Details</h1>
+        <p><strong>Balance:</strong> ${{ debit.balance }}</p>
+        <p><strong>Last Transaction Value:</strong> ${{ debit.last_transaction }}</p>
+        <p><strong>Connected Account:</strong> ●●●●{{ debit.connected_account }}</p>
+        <p><strong>Overdraft Protection:</strong> {{ debit.overdraft_protection|yesno:"True,False" }}</p>
+
+        <div style="margin-top: 20px;">
+            <form method="post" action="/debit/reactivate/" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Reactivate Card</button>
+            </form>
+            <form method="post" action="/debit/close/" style="display: inline; margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit">Close Card</button>
+            </form>
+        </div>
+        {% else %}
+        <p>No debit card information available.</p>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+</body>
+</html>

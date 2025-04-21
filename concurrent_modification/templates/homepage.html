@@ -3,55 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <style>
-        /* Container for the navbar */
-        .navbar {
-            display: flex;
-            background-color: #f0f0f0;
-            padding: 10px;
-            justify-content: space-around;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Style for each nav item */
-        .navbar a {
-            text-decoration: none;
-            color: #333;
-            background-color: #ddd;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Hover effect */
-        .navbar a:hover {
-            background-color: #bbb;
-        }
-
-        /* Push page content below fixed navbar */
-        body {
-            margin-top: 70px;
-            font-family: Arial, sans-serif;
-        }
-    </style>
+    
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="/accounts/">Account</a>
-        <a href="/Transactions/">Transactions</a>
-        <a href="/Debit Cards/">Debit Cards</a>
-        <a href="/loans/">Loans</a>
-        <a href="/Overdrafts/">Overdrafts</a>
-        <a href="/Personal Information/">Personal Information</a>
-        <a href="/Help/">Help</a>
-        <a href="{% url 'signin' %}">Logout</a>
-    </div>
+    {% extends 'navbar.html' %}
+
+    {% block title %}Home{% endblock %}
+
+    {% block content %}
     <p style="display:flex; justify-content: center;align-items: center;height: 20vh;font-size: large;">Logged in as: {{ username }}</p>
     <p2 style="display:flex; justify-content: center;align-items: center;height: 5vh;font-size: large;">Welcome {{ name }}!</p2>
+    {% endblock %}
 
     <!-- if someone is an admin their homepage should be different
     they could have a link to bank branches, employees and functionality to insert, alter and delete 
