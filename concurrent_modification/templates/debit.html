@@ -15,8 +15,8 @@
         {% if debit %}
         <h1>Debit Card Details</h1>
         <p><strong>Balance:</strong> ${{ debit.balance }}</p>
-        <p><strong>Last Transaction Value:</strong> ${{ debit.last_transaction }}</p>
-        <p><strong>Connected Account:</strong> ●●●●{{ debit.connected_account }}</p>
+        <p><strong>Last Transaction Value:</strong> ${{ debit.last_transaction | default_if_none:0}}</p>
+        <p><strong>Connected Account:</strong> {{ debit.connected_account }}</p>
         <p><strong>Overdraft Protection:</strong> {{ debit.overdraft_protection|yesno:"True,False" }}</p>
 
         <div style="margin-top: 20px;">
