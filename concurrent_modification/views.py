@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches
 from django.db.models import Q
 
 class RegisterView(View):
@@ -167,3 +167,8 @@ class AdminView(View):
         username = request.session.get('username')
         name = request.session.get('first_name')
         return render(request, 'admin_home.html', {"username": username, "name": name})
+    
+class BankBranchesView(View):
+    def get(self, request):
+        branches = BankBranches.objects.all()
+        return render(request,'bank_branches.html', {'branches': branches})

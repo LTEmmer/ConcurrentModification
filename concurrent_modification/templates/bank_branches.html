@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts</title>
+</head>
+<body>
+
+    {% extends 'admin_nav_bar.html' %}
+
+    {% block title %}Bank Branches{% endblock %}
+
+    {% block content %}
+
+    {% if branches %}
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        {% for branch in branches %}
+            <div style="border: 1px solid #ccc; padding: 15px; margin: 10px; width: 300px; text-align: center;">
+                <p><strong>Bank ID:</strong> {{ branch.bank_id }}</p>
+                <p><strong>Location:</strong> {{ branch.location }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="display: flex; justify-content: center;">No bank branches exist.</p>
+    {% endif %}
+
+    {% endblock %}
+
+</body>
+</html>
