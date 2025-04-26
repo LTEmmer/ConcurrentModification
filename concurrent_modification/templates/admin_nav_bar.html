@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Page{% endblock %}</title>
+    <style>
+        /* Container for the navbar */
+        .navbar {
+            display: flex;
+            background-color: #f0f0f0;
+            padding: 10px;
+            justify-content: space-around;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Style for each nav item */
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            background-color: #ddd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect */
+        .navbar a:hover {
+            background-color: #bbb;
+        }
+
+        /* Push page content below fixed navbar */
+        body {
+            margin-top: 70px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/home/">Home</a>
+        <a href="/bank_branches/">Bank Branches</a>
+        <a href="/Transactions/">Transactions</a>
+        <a href="{% url 'signin' %}">Logout</a>
+    </div>
+
+    {% block content %}{% endblock %}
+
+</body>
+</html>

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins
 from django.db.models import Q
 
 class RegisterView(View):
@@ -97,7 +97,12 @@ class SigninView(View):
             personal = PersonalDetails.objects.get(details_username=user.username)
             print("Found personal details:", personal.first_name)
             request.session['first_name'] = personal.first_name
-            return redirect('home')
+
+            if Admins.objects.filter(user=user).exists():
+                return redirect('admin_home')
+
+            else:
+                return redirect('home')
 
         except Users.DoesNotExist:
             # The username or password are incorrect
@@ -156,3 +161,9 @@ class DebitView(View):
             }
         }
         return render(request, 'debit.html', context)
+    
+class AdminView(View):
+    def get(self, request):
+        username = request.session.get('username')
+        name = request.session.get('first_name')
+        return render(request, 'admin_home.html', {"username": username, "name": name})
