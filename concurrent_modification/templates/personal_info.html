@@ -4,7 +4,7 @@
     <title>Personal Information</title>
 </head>
 <body>
-
+<div style="display: flex; flex-direction: column; align-items: center;">
     {% extends 'navbar.html' %}
 
     {% block content %}
@@ -15,13 +15,14 @@
             <p><strong>Last Name:</strong> {{ user_details.last_name }}</p>
             <p><strong>Email:</strong> {{ user_details.email }}</p>
             <p><strong>Phone Number:</strong> ({{ user_details.phone_area }}) {{ user_details.phone_num }}</p>
-    
+            <ul></ul>
             <h2>Address:</h2>
             <p><strong>Street:</strong> {{ user_details.street }}</p>
             <p><strong>City:</strong> {{ user_details.city }}</p>
             <p><strong>State:</strong> {{ user_details.state }}</p>
             <p><strong>Zip Code:</strong> {{ user_details.zip_code }}</p>
 
+            <ul></ul>
             <a href="/personal_info_edit"><button>Edit Info</button></a>
              
         {% else %}
@@ -38,6 +39,6 @@
         </div>
         {% endif %}
     {% endblock %}
-    
+</div>
 </body>
 </html>

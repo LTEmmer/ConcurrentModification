@@ -2,56 +2,170 @@
 <html>
 <head>
     <title>Edit Personal Information</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: black;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .messages li {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+
+        .phone-number-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-area {
+            width: 60px;
+            margin-right: 5px;
+        }
+
+        .phone-number {
+            flex-grow: 1;
+            width: auto;
+        }
+
+    </style>
 </head>
 <body>
 
     {% extends 'navbar.html' %}
 
     {% block content %}
-        <h1>Edit Personal Information</h1>
-
-        <form method="POST">
-            {% csrf_token %}
-            
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" value="{{ user_details.first_name }}" required><br>
-
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" value="{{ user_details.last_name }}" required><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ user_details.email }}" required><br>
-
-            <label for="phone_area">Phone Area:</label>
-            <input type="text" id="phone_area" name="phone_area" value="{{ user_details.phone_area }}" required><br>
-
-            <label for="phone_num">Phone Number:</label>
-            <input type="text" id="phone_num" name="phone_num" value="{{ user_details.phone_num }}" required><br>
-
-            <label for="street">Street:</label>
-            <input type="text" id="street" name="street" value="{{ user_details.street }}" required><br>
-
-            <label for="city">City:</label>
-            <input type="text" id="city" name="city" value="{{ user_details.city }}" required><br>
-
-            <label for="state">State:</label>
-            <input type="text" id="state" name="state" value="{{ user_details.state }}" required><br>
-
-            <label for="zip_code">Zip Code:</label>
-            <input type="text" id="zip_code" name="zip_code" value="{{ user_details.zip_code }}" required><br>
-
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a href="/personal_info_edit"><button>Go Back</button></a>
-        </form>
+    <h2 class="form-title">Edit Personal Information</h2>
+    <div class="form-container">
 
         {% if messages %}
-            <div class="alert alert-danger">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
         {% endif %}
 
+        <form method="POST" class="form">
+            {% csrf_token %}
+
+            <h3>User Info</h3>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user_details.first_name }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user_details.last_name }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user_details.email }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="phone_area">Phone number:</label>
+                <div class="phone-number-container">
+                    <label>( </label>
+                    <input type="text" id = "phone_area" name="phone_area" maxlength="3" class="phone-area" value="{{ user_details.phone_area }}" required>
+                    <label>)- </label>
+                    <input type="text" id="phone_num" name="phone_num" maxlength="7" class="phone-number" value="{{ user_details.phone_num }}" required>
+                </div>
+            </div>
+
+            <h3>Address</h3>
+            <div class="form-group">
+                <label for="street">Street:</label>
+                <input type="text" id="street" name="street" value="{{ user_details.street }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" value="{{ user_details.city }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" value="{{ user_details.state }}" required><br>
+            </div>
+            <div class="form-group">
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" value="{{ user_details.zip_code }}" required><br>
+            </div>
+
+            <button type="submit" class="submit-btn">Save Changes</button>
+        </form>
+
+        <p class="back-link"><a href="/personal_info">Go Back</a></p>
     {% endblock %}
 
 </body>
