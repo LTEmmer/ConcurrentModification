@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.utils import timezone
-from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts
 from django.db.models import Q
 
 class RegisterView(View):
@@ -177,3 +177,144 @@ class EmployeesView(View):
     def get(self, request):
         employees = Employees.objects.all()
         return render(request,'employees.html', {'employees': employees})
+
+class OverdraftsView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            # Get the user's account(s)
+            accounts = Accounts.objects.filter(user_id=user_id)
+
+            if not accounts.exists():
+                return render(request, 'overdrafts.html', {'overdrafts': [], 'user': request.session.get('username')})
+
+            # Get all transactions for the user's accounts
+            transactions = Transactions.objects.filter(acct__in=accounts)
+
+            # Get all overdrafts linked to those transactions
+            overdrafts = Overdrafts.objects.filter(overdraft_transaction__in=transactions)
+
+        except Exception as e:
+            print(e)
+            return render(request, 'overdrafts.html', {'overdrafts': [], 'user': request.session.get('username')})
+
+        context = {
+            'user': request.session.get('username'),
+            'overdrafts': overdrafts,
+        }
+        return render(request, 'overdrafts.html', context)
+    
+class PersonalInfoView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            user = Users.objects.get(user_id=user_id)
+            personal = PersonalDetails.objects.get(details_username=user.username)
+            address = Addresses.objects.get(address_username=personal)
+
+        except (Users.DoesNotExist, PersonalDetails.DoesNotExist, Addresses.DoesNotExist):
+            return render(request, 'personal_info.html', {'user_details': None})
+
+        context = {
+            'user': request.session.get('username'),
+            'user_details': {
+                'first_name': personal.first_name,
+                'last_name': personal.last_name,
+                'email': personal.email,
+                'phone_area': personal.phone_area,
+                'phone_num': personal.phone_num,
+                'street': address.address_street,
+                'city': address.addr_city,
+                'state': address.addr_state,
+                'zip_code': address.addr_zip,
+            }
+        }
+        return render(request, 'personal_info.html', context)
+
+class EditPersonalInfoView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            user = Users.objects.get(user_id=user_id)
+            personal = PersonalDetails.objects.get(details_username=user.username)
+            address = Addresses.objects.get(address_username=personal)
+
+        except (Users.DoesNotExist, PersonalDetails.DoesNotExist, Addresses.DoesNotExist):
+            return redirect('personal_info')
+
+        context = {
+            'user_details': {
+                'first_name': personal.first_name,
+                'last_name': personal.last_name,
+                'email': personal.email,
+                'phone_area': personal.phone_area,
+                'phone_num': personal.phone_num,
+                'street': address.address_street,
+                'city': address.addr_city,
+                'state': address.addr_state,
+                'zip_code': address.addr_zip,
+            }
+        }
+        return render(request, 'personal_info_edit.html', context)
+
+    def post(self, request):
+        user_id = request.session.get('user_id')
+
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            user = Users.objects.get(user_id=user_id)
+            personal = PersonalDetails.objects.get(details_username=user.username)
+            address = Addresses.objects.get(address_username=personal)
+
+        except (Users.DoesNotExist, PersonalDetails.DoesNotExist, Addresses.DoesNotExist):
+            return redirect('personal_info')
+
+        # Get form data
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        phone_area = request.POST['phone_area']
+        phone_num = request.POST['phone_num']
+        street = request.POST['street']
+        city = request.POST['city']
+        state = request.POST['state']
+        zip_code = request.POST['zip_code']
+
+        # Check if the email, or phone number is taken by another user
+        if PersonalDetails.objects.filter(email=email).exclude(details_username=user.username).exists():
+            messages.error(request, 'This email is already associated with another account.')
+            return redirect('personal_info_edit')
+        
+        if PersonalDetails.objects.filter(phone_area=phone_area, phone_num=phone_num).exclude(details_username=user.username).exists():
+            messages.error(request, 'This phone number is already in use.')
+            return redirect('personal_info_edit')
+
+        # Update the user details
+        personal.first_name = first_name
+        personal.last_name = last_name
+        personal.email = email
+        personal.phone_area = phone_area
+        personal.phone_num = phone_num
+        address.address_street = street
+        address.addr_city = city
+        address.addr_state = state
+        address.addr_zip = zip_code
+
+        personal.save()
+        address.save()
+
+        messages.success(request, 'Your details have been updated successfully.')
+        return redirect('personal_info')

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Personal Information</title>
+</head>
+<body>
+
+    {% extends 'navbar.html' %}
+
+    {% block content %}
+        <h1>Edit Personal Information</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ user_details.first_name }}" required><br>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ user_details.last_name }}" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user_details.email }}" required><br>
+
+            <label for="phone_area">Phone Area:</label>
+            <input type="text" id="phone_area" name="phone_area" value="{{ user_details.phone_area }}" required><br>
+
+            <label for="phone_num">Phone Number:</label>
+            <input type="text" id="phone_num" name="phone_num" value="{{ user_details.phone_num }}" required><br>
+
+            <label for="street">Street:</label>
+            <input type="text" id="street" name="street" value="{{ user_details.street }}" required><br>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" value="{{ user_details.city }}" required><br>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" value="{{ user_details.state }}" required><br>
+
+            <label for="zip_code">Zip Code:</label>
+            <input type="text" id="zip_code" name="zip_code" value="{{ user_details.zip_code }}" required><br>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/personal_info_edit"><button>Go Back</button></a>
+        </form>
+
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% endblock %}
+
+</body>
+</html>

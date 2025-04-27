@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overdrafts</title>
+</head>
+<body>
+
+    {% extends 'navbar.html' %}
+
+    {% block content %}
+
+    <h1>Overdrafts for {{ user }}</h1>
+
+    {% if overdrafts %}
+        <table border="1">
+
+            <thead>
+                <tr>
+                    <th>Overdraft ID</th>
+                    <th>Amount Over</th>
+                    <th>Penalty Issued</th>
+                    <th>Paid</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for overdraft in overdrafts %}
+                    <tr>
+                        <td>{{ overdraft.overdraft_id }}</td>
+                        <td>${{ overdraft.amount_over }}</td>
+                        <td>{% if overdraft.penalty_issued == 1 %}Yes{% else %}No{% endif %}</td>
+                        <td>{% if overdraft.paid == 1 %}Yes{% else %}No{% endif %}</td>
+                        <td>{{ overdraft.created_at }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    {% else %}
+        <p>No overdrafts found.</p>
+
+    {% endif %}
+
+    {% endblock %}
+
+</body>
+</html>

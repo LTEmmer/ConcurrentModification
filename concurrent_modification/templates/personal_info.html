@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personal Information</title>
+</head>
+<body>
+
+    {% extends 'navbar.html' %}
+
+    {% block content %}
+        <h1>Personal Information for {{ user }}</h1>
+    
+        {% if user_details %}
+            <p><strong>First Name:</strong> {{ user_details.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user_details.last_name }}</p>
+            <p><strong>Email:</strong> {{ user_details.email }}</p>
+            <p><strong>Phone Number:</strong> ({{ user_details.phone_area }}) {{ user_details.phone_num }}</p>
+    
+            <h2>Address:</h2>
+            <p><strong>Street:</strong> {{ user_details.street }}</p>
+            <p><strong>City:</strong> {{ user_details.city }}</p>
+            <p><strong>State:</strong> {{ user_details.state }}</p>
+            <p><strong>Zip Code:</strong> {{ user_details.zip_code }}</p>
+
+            <a href="/personal_info_edit"><button>Edit Info</button></a>
+             
+        {% else %}
+
+            <p>No personal details found.</p>
+
+        {% endif %}
+
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+        </div>
+        {% endif %}
+    {% endblock %}
+    
+</body>
+</html>

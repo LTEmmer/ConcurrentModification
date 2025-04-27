@@ -1,47 +1,168 @@
-<!-- templates/register.html -->
-{% block content %}
-<h2>Create Account</h2>
-<form method="post">
-    {% csrf_token %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
     
-    <h3>User Info</h3>
-    <label>Username:</label>
-    <input type="text" name="username" required><br>
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
-    
-    <h3>Personal Details</h3>
-    <label>First Name:</label>
-    <input type="text" name="first_name"><br>
-    <label>Last Name:</label>
-    <input type="text" name="last_name"><br>
-    <label>Email:</label>
-    <input type="text" name="email"><br>
-    <label>Phone number: (</label>
-    <input type="text" name="phone_area" maxlength="3" size="3">
-    <label>) - </label>
-    <input type="text" name="phone_num" maxlength="7" size="7"><br>
-    
-    <h3>Address</h3>
-    <label>Street:</label>
-    <input type="text" name="street"><br>
-    <label>City:</label>
-    <input type="text" name="city"><br>
-    <label>State:</label>
-    <input type="text" name="state"><br>
-    <label>Zip Code:</label>
-    <input type="text" name="zip" maxlength="5" size="5"><br>
-    
-    <button type="submit">Create Account</button>
-</form>
+    .form-title {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: black;
+    }
 
-<p><a href="{% url 'signin' %}">Go Back</a></p>
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endblock %}
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: inline-block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1em;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #218838;
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .back-link a {
+        text-decoration: none;
+        color: #007BFF;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+    }
+
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    .messages li {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+    }
+
+    .phone-number-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .phone-area {
+        width: 60px;
+        margin-right: 5px;
+    }
+
+    .phone-number {
+        flex-grow: 1;
+        width: auto;
+    }
+
+</style>
+
+<h2 class="form-title">Create Account</h2>
+<div class="form-container">
+    <form method="post" class="form">
+        {% csrf_token %}
+
+        <h3>User Info</h3>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <h3>Personal Details</h3>
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="phone_area">Phone number:</label>
+            <div class="phone-number-container">
+                <label>( </label>
+                <input type="text" name="phone_area" maxlength="3" size="3" class="phone-area">
+                <label>)- </label>
+                <input type="text" name="phone_num" maxlength="7" size="7" class="phone-number">
+            </div>
+        </div>
+
+        <h3>Address</h3>
+        <div class="form-group">
+            <label for="street">Street:</label>
+            <input type="text" name="street">
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" name="city">
+        </div>
+        <div class="form-group">
+            <label for="state">State:</label>
+            <input type="text" name="state">
+        </div>
+        <div class="form-group">
+            <label for="zip">Zip Code:</label>
+            <input type="text" name="zip" maxlength="5" size="5">
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+
+    <p class="back-link"><a href="{% url 'signin' %}">Go Back</a></p>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
