@@ -26,10 +26,13 @@
         <form method="post">
             {% csrf_token %}
             <label>Transaction Type:
-                <input type="text" name="trans_type" required>
+                <select name="trans_type" required>
+                    <option value="deposit">Deposit</option>
+                    <option value="withdrawal">Withdrawal</option>
+                </select>
             </label><br>
             <label>Amount:
-                <input type="number" name="trans_amount" step="0.01" required>
+                <input type="number" name="trans_amt" step="0.01" required>
             </label><br>
             <label>Note:
                 <input type="text" name="trans_note">

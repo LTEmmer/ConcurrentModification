@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
+from decimal import Decimal
 from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts
 from django.db.models import Q
 
@@ -365,21 +366,47 @@ class TransactionsView(View):
             return redirect('transactions')
 
         trans_type = request.POST.get('trans_type')
-        trans_amount = request.POST.get('trans_amount')
+        trans_amt = request.POST.get('trans_amt')
         trans_note = request.POST.get('trans_note')
 
-        if not all([trans_type, trans_amount]):
+        if not all([trans_type, trans_amt]):
             messages.error(request, "Transaction type and amount are required.")
+            return redirect('transactions')
+        
+        try:
+            amount = Decimal(trans_amt)
+        except:
+            messages.error(request, "Invalid amount.")
+            return redirect('transactions')
+        
+        account.balance = Decimal(str(account.balance))
+
+        if trans_type == "deposit":
+            account.balance += amount
+        elif trans_type == "withdrawal":
+            account.balance -= amount
+        else:
+            messages.error(request, "Transaction type must be 'deposit' or 'withdrawal'.")
             return redirect('transactions')
 
         try:
-            Transactions.objects.create(
+            account.save()
+            transaction = Transactions.objects.create(
                 acct=account,
                 trans_type=trans_type,
-                trans_amt=trans_amount,
+                trans_amt=trans_amt,
                 trans_note=trans_note,
                 trans_date=timezone.now().date(),
                 trans_time=timezone.now().date()
+            )
+
+            if trans_type == "withdrawal" and account.balance < 0:
+                Overdrafts.objects.create(
+                amount_over=float(-account.balance),
+                penalty_issued=0,
+                paid=0,
+                created_at=timezone.now().date(),
+                overdraft_transaction=transaction
             )
             messages.success(request, "Transaction created successfully.")
         except Exception as e:
