@@ -19,14 +19,17 @@
         <p><strong>Connected Account:</strong> {{ debit.connected_account }}</p>
         <p><strong>Overdraft Protection:</strong> {{ debit.overdraft_protection|yesno:"True,False" }}</p>
 
-        <div style="margin-top: 20px;">
-            <form method="post" action="/debit/reactivate/" style="display: inline;">
+        <div>
+            <form method="post"
+                action="{% if debit.is_active %}{% url 'debit_close' %}{% else %}{% url 'debit_reactivate' %}{% endif %}"
+                onsubmit="return confirm('{% if debit.is_active %}Are you sure you want to close your debit card?{% else %}Are you sure you want to reactivate your debit card?{% endif %}');"
+                style="margin-top: 20px;">        
                 {% csrf_token %}
-                <button type="submit">Reactivate Card</button>
-            </form>
-            <form method="post" action="/debit/close/" style="display: inline; margin-left: 10px;">
-                {% csrf_token %}
-                <button type="submit">Close Card</button>
+                <button type="submit">
+                    {% if debit.is_active %}Close Card
+                    {% else %}Reactivate Card
+                    {% endif %}
+                </button>
             </form>
         </div>
         {% else %}

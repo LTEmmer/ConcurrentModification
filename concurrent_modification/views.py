@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
 from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts
@@ -157,7 +159,8 @@ class DebitView(View):
                 'balance': account.balance,
                 'last_transaction': last_txn.trans_amt if last_txn else None,
                 'connected_account': account.acct_id,
-                'overdraft_protection': True
+                'overdraft_protection': True,
+                'is_active': bool(account.is_active),
             }
         }
         return render(request, 'debit.html', context)
@@ -318,3 +321,30 @@ class EditPersonalInfoView(View):
 
         messages.success(request, 'Your details have been updated successfully.')
         return redirect('personal_info')
+    
+class ReactivateDebitView(View):
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id: return redirect('signin')
+        try:
+            account = Accounts.objects.get(user_id=user_id)
+            account.is_active = 1
+            account.save()
+            messages.success(request, "Debit card reactivated successfully.")
+        except Accounts.DoesNotExist:
+            messages.error(request, "Account not found.")     
+        return redirect('debit')
+
+
+class CloseDebitView(View):
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id: return redirect('signin')
+        try:
+            account = Accounts.objects.get(user_id=user_id)
+            account.is_active = 0
+            account.save()
+            messages.success(request, "Debit card closed successfully.")
+        except Accounts.DoesNotExist:
+            messages.error(request, "Account not found.")
+        return redirect('debit')
