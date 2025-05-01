@@ -348,3 +348,41 @@ class CloseDebitView(View):
         except Accounts.DoesNotExist:
             messages.error(request, "Account not found.")
         return redirect('debit')
+
+class TransactionsView(View):
+    def get(self, request):
+        transactions = Transactions.objects.all()
+        return render(request, 'transactions.html', {'transactions': transactions})
+
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id: return redirect('signin')
+
+        try:
+            account = Accounts.objects.get(user_id=user_id)
+        except Accounts.DoesNotExist:
+            messages.error(request, "No account found.")
+            return redirect('transactions')
+
+        trans_type = request.POST.get('trans_type')
+        trans_amount = request.POST.get('trans_amount')
+        trans_note = request.POST.get('trans_note')
+
+        if not all([trans_type, trans_amount]):
+            messages.error(request, "Transaction type and amount are required.")
+            return redirect('transactions')
+
+        try:
+            Transactions.objects.create(
+                acct=account,
+                trans_type=trans_type,
+                trans_amt=trans_amount,
+                trans_note=trans_note,
+                trans_date=timezone.now().date(),
+                trans_time=timezone.now().date()
+            )
+            messages.success(request, "Transaction created successfully.")
+        except Exception as e:
+            messages.error(request, f"Failed to create transaction: {e}")
+
+        return redirect('transactions')

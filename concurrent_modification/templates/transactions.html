@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+</head>
+<body>
+
+    {% extends 'navbar.html' %}
+
+    {% block title %}Transactions{% endblock %}
+
+    {% block content %}
+
+    {% if transactions %}
+    <div style="display: flex; flex-direction: column; align-items: center;">
+    <h1>Recent Transactions:</h1>
+    {% for transaction in transactions %}
+        <h2>Transaction {{ forloop.counter }}:</h2>
+        <p><strong>Type:</strong> {{ transaction.trans_type }}</p>
+        <p><strong>Date:</strong> {{ transaction.trans_date }}</p>
+        <p><strong>Amount:</strong> {{ transaction.trans_amt }}</p>
+        <p><strong>Memo:</strong> {{ transaction.trans_note }}</p>
+    {% endfor %}
+        <h2>Make Transaction</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label>Transaction Type:
+                <input type="text" name="trans_type" required>
+            </label><br>
+            <label>Amount:
+                <input type="number" name="trans_amount" step="0.01" required>
+            </label><br>
+            <label>Note:
+                <input type="text" name="trans_note">
+            </label><br>
+            <button type="submit">Create Transaction</button>
+        </form>
+    </div>
+    {% else %}
+    <p style="display: flex; justify-content: center;">You have never made a transaction.</p>
+    {% endif %}
+
+    {% endblock %}
+
+</body>
+</html>

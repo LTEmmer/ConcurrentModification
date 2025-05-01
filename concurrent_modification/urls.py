@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import DebitView, SigninView, HomeView, RegisterView, LoansView, AccountView, AdminView, BankBranchesView, EmployeesView, OverdraftsView, PersonalInfoView, EditPersonalInfoView, ReactivateDebitView, CloseDebitView
+from .views import DebitView, SigninView, HomeView, RegisterView, LoansView, AccountView, AdminView, BankBranchesView, EmployeesView, OverdraftsView, PersonalInfoView, EditPersonalInfoView, ReactivateDebitView, CloseDebitView, TransactionsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +34,7 @@ urlpatterns = [
     path('personal_info_edit/', EditPersonalInfoView.as_view(), name='personal_info_edit'),
     path('debit/reactivate/', ReactivateDebitView.as_view(), name='debit_reactivate'),
     path('debit/close/', CloseDebitView.as_view(), name='debit_close'),
+    path('transactions/', TransactionsView.as_view(), name='transactions')
 ]
 
 
