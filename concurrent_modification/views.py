@@ -352,7 +352,16 @@ class CloseDebitView(View):
 
 class TransactionsView(View):
     def get(self, request):
-        transactions = Transactions.objects.all()
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        try:
+            account = Accounts.objects.get(user_id=user_id)
+            transactions = Transactions.objects.filter(acct=account).order_by('-trans_date', '-trans_time')
+        except Accounts.DoesNotExist:
+            messages.warning(request, "No account found. Please create an account to view transactions.")
+            return render(request, 'transactions.html', {'transactions': [], 'user': request.session.get('username')})
         return render(request, 'transactions.html', {'transactions': transactions})
 
     def post(self, request):
