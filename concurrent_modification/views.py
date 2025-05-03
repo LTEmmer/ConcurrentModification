@@ -422,3 +422,39 @@ class TransactionsView(View):
             messages.error(request, f"Failed to create transaction: {e}")
 
         return redirect('transactions')
+
+@login_required
+def help_page_view(request):
+    """
+    Displays the help page and handles help ticket submissions.
+    """
+    if request.method == 'POST':
+        form = HelpTicketForm(request.POST)
+        if form.is_valid():
+            # Create a HelpTicket instance but don't save yet
+            new_ticket = HelpTicket(
+                user=request.user,
+                subject=form.cleaned_data['subject'],
+                message=form.cleaned_data['message']
+                # status defaults to 'Open' as defined in the model
+            )
+            new_ticket.save() # Save the new ticket to the database
+
+            messages.success(request, 'Your help request has been submitted successfully! We will get back to you soon.')
+            return redirect('banking:help_page') # Redirect to the same page (or a thank you page)
+        else:
+            # Form is invalid, errors will be attached to the form instance
+            messages.error(request, 'Please correct the errors below.')
+            # Fall through to render the page with the invalid form below
+    else:
+        # GET request: Create a blank form instance
+        form = HelpTicketForm()
+
+    # Context for both GET and invalid POST requests
+    context = {
+        'form': form,
+        'page_title': 'Help & Support'
+        # You could also fetch FAQs from the database here if they were dynamic
+        # 'faqs': FAQ.objects.filter(is_active=True)
+    }
+    return render(request, 'banking/help.html', context)
