@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title|default:"Help & Support" }}{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ page_title|default:"Help & Support" }}</h1>
+    <hr>
+
+    {# Display Messages (Success/Error) - Ensure this or similar is in base.html #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {# --- Section 1: FAQs (Example Static Content) --- #}
+    <section class="mb-5">
+        <h2>Frequently Asked Questions (FAQs)</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        How do I reset my password?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can reset your password by clicking the "Forgot Password?" link on the login page and following the instructions sent to your registered email address.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Where can I see my transaction history?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Navigate to the 'Accounts' page and select the desired account. You will find a detailed transaction history there. For specific transaction types, visit the 'Transactions' page.
+                    </div>
+                </div>
+            </div>
+            {# Add more FAQ items here #}
+        </div>
+    </section>
+
+    {# --- Section 2: Contact Information (Example Static Content) --- #}
+    <section class="mb-5">
+        <h2>Contact Us</h2>
+        <p>If you need further assistance, you can reach us through the following channels:</p>
+        <ul>
+            <li><strong>Customer Support Phone:</strong> 1-800-BANK-XYZ (Mon-Fri, 9am-5pm)</li>
+            <li><strong>Support Email:</strong> support@concurrentbank.com</li>
+            <li><strong>Visit a Branch:</strong> <a href="{% url 'banking:bank_branches_page' %}">Find a branch near you</a> {# Example link - update name #}</li>
+        </ul>
+    </section>
+
+    {# --- Section 3: Submit a Help Request Form --- #}
+    <section>
+        <h2>Submit a Help Request</h2>
+        <p>If your question isn't answered above, please fill out the form below and our support team will get back to you.</p>
+
+        <form method="post" action="{% url 'banking:help_page' %}">
+            {% csrf_token %}
+
+            {# Display Non-Field Errors (e.g., issues not tied to a specific field) #}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Render Subject Field #}
+            <div class="mb-3">
+                <label for="{{ form.subject.id_for_label }}" class="form-label">{{ form.subject.label }}</label>
+                {{ form.subject }} {# Renders the widget with attributes defined in forms.py #}
+                {% if form.subject.errors %}
+                    <div class="invalid-feedback d-block"> {# Use d-block with non-Bootstrap form rendering #}
+                        {% for error in form.subject.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.subject.help_text %}
+                     <small class="form-text text-muted">{{ form.subject.help_text|safe }}</small>
+                {% endif %}
+            </div>
+
+            {# Render Message Field #}
+            <div class="mb-3">
+                <label for="{{ form.message.id_for_label }}" class="form-label">{{ form.message.label }}</label>
+                {{ form.message }} {# Renders the widget #}
+                 {% if form.message.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.message.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                 {% if form.message.help_text %}
+                     <small class="form-text text-muted">{{ form.message.help_text|safe }}</small>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+    </section>
+
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+{# If using Bootstrap JS for accordion, ensure it's loaded (likely in base.html) #}
+{% endblock extra_js %}
