@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
 from decimal import Decimal
-from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts, HelpTickets
 from django.db.models import Q
 
 class RegisterView(View):
@@ -422,3 +422,52 @@ class TransactionsView(View):
             messages.error(request, f"Failed to create transaction: {e}")
 
         return redirect('transactions')
+
+class HelpView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+        tickets = HelpTickets.objects.filter(
+            ticket_user_id=user_id
+        ).order_by('-created_at')
+        return render(request, 'help.html', {
+            'tickets': tickets
+        })
+
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        msg = request.POST.get('ticket_message', '').strip()
+        if not msg:
+            messages.error(request, "Please enter a description of your issue.")
+        else:
+            user = Users.objects.get(user_id=user_id)
+            HelpTickets.objects.create(
+                ticket_user    = user,
+                ticket_message = msg,
+                created_at     = timezone.now()
+            )
+            messages.success(request, "Your ticket has been submitted!")
+
+        tickets = HelpTickets.objects.filter(
+            ticket_user_id=user_id
+        ).order_by('-created_at')
+        return render(request, 'help.html', {
+            'tickets': tickets
+        })
+    
+class DeleteTicketView(View):
+    def post(self, request, ticket_id):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        HelpTickets.objects.filter(
+            ticket_id=ticket_id,
+            ticket_user_id=user_id
+        ).delete()
+        messages.success(request, "Ticket deleted.")
+        return redirect('help')

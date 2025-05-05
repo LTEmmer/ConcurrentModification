@@ -1,0 +1,49 @@
+{% extends 'navbar.html' %}
+{% block title %}Help Ticket{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: flex-start; padding-top: 30px;">
+  <div style="text-align: center; width: 100%; max-width: 600px;">
+    {% if request.session.user_id %}
+      <h1 style="font-size: 2em;">Submit a Help Ticket</h1>
+      <form method="post" action="{% url 'submit_ticket' %}">
+        {% csrf_token %}
+        <div>
+          <label for="ticket_message">Please explain your problem in detail below and we'll get on it as soon as possible!</label><br/>
+          <textarea name="ticket_message" id="ticket_message" rows="10" style="width: 100%;" required></textarea>
+        </div>
+        <button type="submit" style="margin-top: 15px; padding: 8px 16px;">Submit</button>
+      </form>
+
+      {% if messages %}
+        <ul style="list-style: none; padding: 0; margin-top: 20px; text-align: left;">
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <hr style="margin: 40px 0;">
+      <h2 style="text-align: left;">Your Previous Tickets</h2>
+      <ul style="list-style: none; padding: 0; text-align: left;">
+        {% for ticket in tickets %}
+          <li style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong>{{ ticket.created_at|date:"M d, Y H:i" }}</strong>
+              <p>{{ ticket.ticket_message }}</p>
+            </div>
+            <form method="post" action="{% url 'delete_ticket' ticket.ticket_id %}" style="margin:0;">
+              {% csrf_token %}
+              <button type="submit" style="margin-left: 10px; padding: 4px 8px;">Delete</button>
+            </form>
+          </li>
+        {% empty %}
+          <li>No tickets submitted yet.</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Please <a href="{% url 'signin' %}">log in</a> to file a ticket.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
