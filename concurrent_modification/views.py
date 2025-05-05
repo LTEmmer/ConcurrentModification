@@ -453,3 +453,51 @@ class AdminUsersView(View):
 
         return redirect('admin_users')
 
+class HelpView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+        tickets = HelpTickets.objects.filter(
+            ticket_user_id=user_id
+        ).order_by('-created_at')
+        return render(request, 'help.html', {
+            'tickets': tickets
+        })
+
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        msg = request.POST.get('ticket_message', '').strip()
+        if not msg:
+            messages.error(request, "Please enter a description of your issue.")
+        else:
+            user = Users.objects.get(user_id=user_id)
+            HelpTickets.objects.create(
+                ticket_user    = user,
+                ticket_message = msg,
+                created_at     = timezone.now()
+            )
+            messages.success(request, "Your ticket has been submitted!")
+
+        tickets = HelpTickets.objects.filter(
+            ticket_user_id=user_id
+        ).order_by('-created_at')
+        return render(request, 'help.html', {
+            'tickets': tickets
+        })
+
+class DeleteTicketView(View):
+    def post(self, request, ticket_id):
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+
+        HelpTickets.objects.filter(
+            ticket_id=ticket_id,
+            ticket_user_id=user_id
+        ).delete()
+        messages.success(request, "Ticket deleted.")
+        return redirect('help')
