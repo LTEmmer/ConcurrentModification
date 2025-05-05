@@ -39,6 +39,15 @@
             </label><br>
             <button type="submit">Create Transaction</button>
         </form>
+
+        {% if messages %}
+        <div class="alert alert-danger">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+        </div>
+        {% endif %}
+        
     </div>
     {% else %}
     <p style="display: flex; justify-content: center;">You have never made a transaction.</p>

@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
 from decimal import Decimal
-from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts
+from .models import DebitCards, Transactions, Users, PersonalDetails, Addresses, Loans, Accounts, Admins, BankBranches, Employees, Overdrafts, HelpTickets
 from django.db.models import Q
 
 class RegisterView(View):
@@ -422,3 +422,34 @@ class TransactionsView(View):
             messages.error(request, f"Failed to create transaction: {e}")
 
         return redirect('transactions')
+    
+
+class AdminHelpView(View):
+    def get(self, request):
+        tickets = HelpTickets.objects.all().order_by('-created_at')
+        return render(request, 'admin_help.html', {'tickets': tickets})
+
+
+class AdminUsersView(View):
+    def get(self, request):
+        users = list(Users.objects.all())
+        details = PersonalDetails.objects.select_related('details_username')
+
+        # Attach personal details to user object
+        details_map = {d.details_username.username: d for d in details}
+        for user in users:
+            user.details = details_map.get(user.username)
+
+        return render(request, 'admin_users.html', {'users': users})
+    
+    def post(self, request):
+        user_id = request.POST.get('user_id')
+        try:
+            user = Users.objects.get(user_id=user_id)
+            user.delete()
+
+        except Users.DoesNotExist:
+            pass
+
+        return redirect('admin_users')
+
