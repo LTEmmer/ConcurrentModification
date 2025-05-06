@@ -51,6 +51,25 @@
     </div>
     {% else %}
     <p style="display: flex; justify-content: center;">You have never made a transaction.</p>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+    <h2>Make Transaction</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Transaction Type:
+            <select name="trans_type" required>
+                <option value="deposit">Deposit</option>
+                <option value="withdrawal">Withdrawal</option>
+            </select>
+        </label><br>
+        <label>Amount:
+            <input type="number" name="trans_amt" step="0.01" required>
+        </label><br>
+        <label>Note:
+            <input type="text" name="trans_note">
+        </label><br>
+        <button type="submit">Create Transaction</button>
+    </form>
+    </div>
     {% endif %}
 
     {% endblock %}
