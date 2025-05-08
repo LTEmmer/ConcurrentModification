@@ -11,9 +11,9 @@
     {% block title %}Debit{% endblock %}
 
     {% block content %}
-    <div style="display: flex; flex-direction: column; align-items: center; padding-top: 30px;">
-        <h1 style="font-size: 2em;">Debit Cards</h1>
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
         {% if debit %}
+        <h1>Debit Card Details</h1>
         <p><strong>Balance:</strong> ${{ debit.balance | floatformat:2 }}</p>
         <p><strong>Last Transaction Value:</strong> ${{ debit.last_transaction | default_if_none:0}}</p>
         <p><strong>Connected Account:</strong> {{ debit.connected_account }}</p>
@@ -35,6 +35,14 @@
         {% else %}
         <p>No debit card information available.</p>
         {% endif %}
+
+    {% if messages %}
+    <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+    </div>
+    {% endif %}
     </div>
     {% endblock %}
 
