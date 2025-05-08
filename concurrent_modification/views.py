@@ -495,7 +495,6 @@ class HelpView(View):
         return render(request, 'help.html', {
             'tickets': tickets
         })
-
 class DeleteTicketView(View):
     def post(self, request, ticket_id):
         user_id = request.session.get('user_id')
