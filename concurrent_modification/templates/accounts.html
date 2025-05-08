@@ -13,7 +13,7 @@
     {% block content %}
 
     {% if account %}
-    <div style="display: flex; flex-direction: column; align-items: center; padding: 30px">
+    <div style="display: flex; flex-direction: column; align-items: center;">
         <h1>{{ user }}'s Debit Account</h1>
         {% if account.is_active == 1 %} <p style="color:rgb(8, 221, 8)"><strong>Active</strong></p>
         {% else %} <p style="color:red"><strong>Inactive</strong></p>

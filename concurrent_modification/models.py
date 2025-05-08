@@ -72,10 +72,9 @@ class Employees(models.Model):
 
 class HelpTickets(models.Model):
     ticket_id = models.AutoField(primary_key=True)
-    ticket_user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
-    ticket_title = models.CharField(max_length=256, default='', blank=True)
     ticket_message = models.CharField(max_length=1000)
     created_at = models.DateTimeField(blank=True, null=True)
+    ticket_user = models.ForeignKey('Users', on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         db_table = 'help_tickets'
