@@ -3,31 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title>Employees</title>
+    <style>
+        /* .navbar {
+        display:flex; background:#f0f0f0; padding:10px;
+        justify-content:space-around; position:fixed; top:0;
+        width:100%; box-shadow:0 2px 5px rgba(0,0,0,0.1); z-index:100;
+        }
+        .navbar a {
+        text-decoration:none; color:#333; background:#ddd;
+        padding:8px 16px; border-radius:6px; transition:background .3s;
+        }
+        .navbar a:hover, .navbar a.active { background:#bbb; } */
+        body {
+        margin:0; padding-top:30px; font-family:Arial, sans-serif;
+        background:#fafafa; text-align: center;
+        }
+        main {
+        max-width:960px; margin:20px auto; padding:0 20px; text-align:center;
+        }
+        .employees-table {
+        width:auto; max-width:100%; border-collapse:collapse; margin:20px auto;
+        background:#fff;
+        }
+        .employees-table th, .employees-table td {
+        border:1px solid #ccc; padding:10px; text-align:center;
+        }
+        .employees-table th { background:#f9f9f9; }
+        .pagination {
+        text-align:center; margin:20px 0;
+        }
+        .pagination a, .pagination span {
+        margin:0 4px; text-decoration:none; padding:6px 10px;
+        border:1px solid #ccc; border-radius:4px; color:#333;
+        }
+        .pagination .current {
+        background:#ddd; pointer-events:none; font-weight:bold;
+        }
+    </style>
 </head>
 <body>
-
+    
     {% extends 'admin_nav_bar.html' %}
 
-    {% block title %}Employees{% endblock %}
-
     {% block content %}
+    <main>
+        <h1 style="display: flex; flex-direction: column; align-items: center; padding: 30px;">Employees</h1>
+        {% if employees %}
+            <table class="employees-table">
 
-    {% if employees %}
-    <div style="display: flex; flex-direction: column; align-items: center;">
-        {% for employee in employees %}
-            <div style="border: 1px solid #ccc; padding: 15px; margin: 10px; width: 300px; text-align: center;">
-                <p><strong>Employee ID:</strong> {{ employee.employee_id }}</p>
-                <p><strong>First Name:</strong> {{ employee.first_name }}</p>
-                <p><strong>Last Name:</strong> {{ employee.last_name }}</p>
-                <p><strong>Works at the </strong> {{ employee.employee_bank_branch.location }} <strong> location</strong></p>
-            </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p style="display: flex; justify-content: center;">You have no employees in your company.</p>
-    {% endif %}
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
 
-    {% endblock %}
+                <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>{{ employee.employee_id }}</td>
+                            <td>{{ employee.first_name }}</td>
+                            <td>{{ employee.last_name }}</td>
+                            <td>{% if employee.employee_bank_branch.location %}
+                                {{ employee.employee_bank_branch.location }}
+                                {% else %}
+                                Remote
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
 
+            </table>
+
+        {% else %}
+            <p>You have no employees in your company.</p>
+        {% endif %}
+
+        {% endblock %}
+    </main>
 </body>
 </html>

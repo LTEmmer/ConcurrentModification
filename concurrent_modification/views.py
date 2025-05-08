@@ -428,29 +428,34 @@ class AdminHelpView(View):
     def get(self, request):
         tickets = HelpTickets.objects.all().order_by('-created_at')
         return render(request, 'admin_help.html', {'tickets': tickets})
+    
+    def post(self, request, ticket_id):
+        deleted, _ = HelpTickets.objects.filter(ticket_id=ticket_id).delete()
+        if deleted:
+            messages.success(request, f"Deleted ticket #{ticket_id}.")
+        else:
+            messages.error(request, "That ticket was not found.")
+        return redirect('admin_help')
 
 
 class AdminUsersView(View):
     def get(self, request):
         users = list(Users.objects.all())
         details = PersonalDetails.objects.select_related('details_username')
-
-        # Attach personal details to user object
         details_map = {d.details_username.username: d for d in details}
         for user in users:
             user.details = details_map.get(user.username)
-
         return render(request, 'admin_users.html', {'users': users})
     
     def post(self, request):
         user_id = request.POST.get('user_id')
         try:
             user = Users.objects.get(user_id=user_id)
+            HelpTickets.objects.filter(ticket_user=user).delete()
             user.delete()
-
+            messages.success(request, "User and related help-tickets deleted.")
         except Users.DoesNotExist:
-            pass
-
+            messages.error(request, "That user does not exist.")
         return redirect('admin_users')
 
 class HelpView(View):
@@ -471,12 +476,14 @@ class HelpView(View):
             return redirect('signin')
 
         msg = request.POST.get('ticket_message', '').strip()
+        title = request.POST.get('ticket_title', '').strip()
         if not msg:
             messages.error(request, "Please enter a description of your issue.")
         else:
             user = Users.objects.get(user_id=user_id)
             HelpTickets.objects.create(
                 ticket_user    = user,
+                ticket_title   = title,
                 ticket_message = msg,
                 created_at     = timezone.now()
             )
