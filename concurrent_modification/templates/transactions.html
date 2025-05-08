@@ -12,17 +12,8 @@
 
     {% block content %}
 
-    {% if transactions %}
-    <div style="display: flex; flex-direction: column; align-items: center;">
-    <h1>Recent Transactions:</h1>
-    {% for transaction in transactions %}
-        <h2>Transaction {{ forloop.counter }}:</h2>
-        <p><strong>Type:</strong> {{ transaction.trans_type }}</p>
-        <p><strong>Date:</strong> {{ transaction.trans_date }}</p>
-        <p><strong>Amount:</strong> {{ transaction.trans_amt }}</p>
-        <p><strong>Memo:</strong> {{ transaction.trans_note }}</p>
-    {% endfor %}
-        <h2>Make Transaction</h2>
+    <div style="display: flex; flex-direction: column; align-items: center; padding: 30px;">
+        <h1>Make Transaction</h1>
         <form method="post">
             {% csrf_token %}
             <label>Transaction Type:
@@ -39,38 +30,27 @@
             </label><br>
             <button type="submit">Create Transaction</button>
         </form>
-
-        {% if messages %}
-        <div class="alert alert-danger">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
+    </div>
+    {% if transactions %}
+    <div style="display: flex; flex-direction: column; align-items: center; padding-top: 15px; text-align: center;">
+        <h2 style="margin-bottom: 30px; text-align: center; width: 100%;">Recent Transactions:</h2>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; text-align: center;">
+            {% for transaction in transactions %}
+            <div style="border: 1px solid #ccc; padding: 10px; width: 100%; margin-bottom: 10px; overflow-wrap: break-word;">
+                <h2>Transaction {{ forloop.counter }}:</h2>
+                <p><strong>Type:</strong> {{ transaction.trans_type }}</p>
+                <p><strong>Date:</strong> {{ transaction.trans_date }}</p>
+                <p><strong>Amount:</strong> {{ transaction.trans_amt|floatformat:2 }}</p>
+                <p><strong>Memo:</strong> {{ transaction.trans_note }}</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endif %}
-        
     </div>
     {% else %}
     <p style="display: flex; justify-content: center;">You have never made a transaction.</p>
-    <div style="display: flex; flex-direction: column; align-items: center;">
-    <h2>Make Transaction</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label>Transaction Type:
-            <select name="trans_type" required>
-                <option value="deposit">Deposit</option>
-                <option value="withdrawal">Withdrawal</option>
-            </select>
-        </label><br>
-        <label>Amount:
-            <input type="number" name="trans_amt" step="0.01" required>
-        </label><br>
-        <label>Note:
-            <input type="text" name="trans_note">
-        </label><br>
-        <button type="submit">Create Transaction</button>
-    </form>
-    </div>
+
     {% endif %}
+
 
     {% endblock %}
 

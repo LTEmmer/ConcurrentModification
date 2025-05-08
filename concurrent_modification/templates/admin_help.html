@@ -4,25 +4,30 @@
     <title>Admin - Help Tickets</title>
 </head>
 <body>
+
     {% extends 'admin_nav_bar.html' %}
 
     {% block content %}
-    <div style="display: flex; flex-direction: column; align-items: center;">
-    <h1>Help Tickets</h1>
-
-    {% if tickets %}
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <h1>Help Tickets</h1>
+      {% if tickets %}
         {% for ticket in tickets %}
-            <div style="border: 1px solid #ccc; padding: 15px; margin: 10px; width: 300px; text-align: center;">
-                <p><strong>User:</strong> {{ ticket.ticket_user.username }}</p>
-                <p><strong>Message:</strong> {{ ticket.ticket_message }}</p>
-                <p><strong>Created:</strong> {{ ticket.created_at }}</p>
-            </div>
+          <div style="border:1px solid #ccc; padding:15px; margin:10px; width:300px; position:relative; overflow-wrap: break-word;  word-break: break-word;">
+            <p><strong>User:</strong> {{ ticket.ticket_user.username }}</p>
+            <p><strong>Title:</strong> {{ ticket.ticket_title }}</p>
+            <p><strong>Message:</strong> {{ ticket.ticket_message }}</p>
+            <p><strong>Created:</strong> {{ ticket.created_at }}</p>
+            <form method="post" action="{% url 'admin_help' ticket.ticket_id %}" style="margin:0; flex: 0 0 auto; align-self: start;">
+              {% csrf_token %}
+              <button type="submit">Delete</button>
+            </form>
+          </div>
         {% endfor %}
-    </div>
-    {% else %}
-    <p style="display: flex; justify-content: center;">No help tickets found.</p>
-    {% endif %}
+      {% else %}
+        <p style="display:flex; justify-content:center;">No help tickets found.</p>
+      {% endif %}
     </div>
     {% endblock %}
+
 </body>
 </html>
